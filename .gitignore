@@ -1,0 +1,16 @@
+# build outputs
+bin/
+*.o
+__pycache__/
+# generated datasets (reproducible from the seeded generators)
+data/
+# per-run scratch
+logs/
+hadoop/conf-*
+.verify.*
+*.log.iter
+# local benchmark outputs (cluster results live in */results/cluster/)
+section*/*/results/*.out
+section*/*/results/*.csv
+section2/q2_grpc/results/local_*.csv
+section3/problem1/demo/local_*
