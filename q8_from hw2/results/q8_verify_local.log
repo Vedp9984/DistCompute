@@ -1,0 +1,71 @@
+== fixed cases: sequential vs. stored expected output ==
+  PASS  empty
+  PASS  handmade
+  PASS  k_exceeds
+  PASS  one_station
+  PASS  single
+  PASS  tiny
+== fixed cases: sequential vs. independent Python oracle ==
+  PASS  empty
+  PASS  handmade
+  PASS  k_exceeds
+  PASS  one_station
+  PASS  single
+  PASS  tiny
+== fixed cases: MPI vs. sequential, P = 1 2 4 8 ==
+  PASS  empty P=1
+  PASS  empty P=2
+  PASS  empty P=4
+  PASS  empty P=8
+  PASS  handmade P=1
+  PASS  handmade P=2
+  PASS  handmade P=4
+  PASS  handmade P=8
+  PASS  k_exceeds P=1
+  PASS  k_exceeds P=2
+  PASS  k_exceeds P=4
+  PASS  k_exceeds P=8
+  PASS  one_station P=1
+  PASS  one_station P=2
+  PASS  one_station P=4
+  PASS  one_station P=8
+  PASS  single P=1
+  PASS  single P=2
+  PASS  single P=4
+  PASS  single P=8
+  PASS  tiny P=1
+  PASS  tiny P=2
+  PASS  tiny P=4
+  PASS  tiny P=8
+== generated datasets: MPI vs. sequential, P = 1 2 4 8 ==
+  PASS  tidy N=1000 S=50 P=1
+  PASS  tidy N=1000 S=50 P=2
+  PASS  tidy N=1000 S=50 P=4
+  PASS  tidy N=1000 S=50 P=8
+  PASS  prime-N N=200003 S=97 P=1
+  PASS  prime-N N=200003 S=97 P=2
+  PASS  prime-N N=200003 S=97 P=4
+  PASS  prime-N N=200003 S=97 P=8
+  PASS  few-stations N=50000 S=3 P=1
+  PASS  few-stations N=50000 S=3 P=2
+  PASS  few-stations N=50000 S=3 P=4
+  PASS  few-stations N=50000 S=3 P=8
+  PASS  many-stations N=50000 S=4000 P=1
+  PASS  many-stations N=50000 S=4000 P=2
+  PASS  many-stations N=50000 S=4000 P=4
+  PASS  many-stations N=50000 S=4000 P=8
+  PASS  one-bucket N=100000 S=200 P=1
+  PASS  one-bucket N=100000 S=200 P=2
+  PASS  one-bucket N=100000 S=200 P=4
+  PASS  one-bucket N=100000 S=200 P=8
+  PASS  tiny N=7 S=3 P=1
+  PASS  tiny N=7 S=3 P=2
+  PASS  tiny N=7 S=3 P=4
+  PASS  tiny N=7 S=3 P=8
+  PASS  single-record N=1 S=1 P=1
+  PASS  single-record N=1 S=1 P=2
+  PASS  single-record N=1 S=1 P=4
+  PASS  single-record N=1 S=1 P=8
+
+ALL CHECKS PASSED
+### q8 exit: 0

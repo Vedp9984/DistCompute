@@ -1,0 +1,109 @@
+==========================================
+SLURM_JOB_ID = 80158
+SLURM_NODELIST = node[01-03,06]
+SLURM_JOB_GPUS = 
+==========================================
+job 80158  nodes=4  tasks=8
+nodelist: node[01-03,06]
+=== node topology ===
+CPU(s):              64
+Thread(s) per core:  2
+Core(s) per socket:  16
+Socket(s):           2
+   NumNodes=4 NumCPUs=16 NumTasks=8 CPUs/Task=2 ReqB:S:C:T=0:0:*:*
+=== rank placement (one line per rank) ===
+[node01.local:3218441] MCW rank 0 bound to socket 0[core 0[hwt 0-1]]: [BB/..][]
+[node01.local:3218441] MCW rank 4 bound to socket 0[core 1[hwt 0-1]]: [../BB][]
+node01.local
+node01.local
+[node06.local:1467887] MCW rank 3 bound to socket 0[core 0[hwt 0-1]]: [BB/..][]
+node06.local
+[node06.local:1467887] MCW rank 7 bound to socket 0[core 1[hwt 0-1]]: [../BB][]
+node06.local
+[node02.local:1338171] MCW rank 1 bound to socket 0[core 0[hwt 0-1]]: [BB/..][]
+node02.local
+[node02.local:1338171] MCW rank 5 bound to socket 0[core 1[hwt 0-1]]: [../BB][]
+node02.local
+[node03.local:3574712] MCW rank 2 bound to socket 0[core 0[hwt 0-1]]: [BB/..][][][]
+node03.local
+[node03.local:3574712] MCW rank 6 bound to socket 0[core 1[hwt 0-1]]: [../BB][][][]
+node03.local
+mpicxx -O2 -std=c++17 -Wall -Wextra -DOMPI_SKIP_MPICXX -o bin.80158/weather_mpi src/weather_mpi.cpp
+g++ -O2 -std=c++17 -Wall -Wextra -DOMPI_SKIP_MPICXX -o bin.80158/weather_seq src/weather_seq.cpp
+g++ -O2 -std=c++17 -Wall -Wextra -DOMPI_SKIP_MPICXX -o bin.80158/gen_weather src/gen_weather.cpp
+=== dataset generation ===
+  exists  small    data/weather_small.txt
+  exists  medium   data/weather_medium.txt
+  exists  large    data/weather_large.txt
+  exists  xlarge   data/weather_xlarge.txt
+
+total 3.2G
+-rw-r--r-- 1 cs3401.20 cs3401 858M Aug 28 12:39 weather_large.txt
+-rw-r--r-- 1 cs3401.20 cs3401 213M Aug 28 12:38 weather_medium.txt
+-rw-r--r-- 1 cs3401.20 cs3401  42M Aug 28 12:38 weather_small.txt
+-rw-r--r-- 1 cs3401.20 cs3401 2.2G Aug 28 12:40 weather_xlarge.txt
+=== benchmark ===
+  small   seq   rep=1  total=0.477142s
+  small   seq   rep=2  total=0.477171s
+  small   seq   rep=3  total=0.475580s
+  small   P=1 rep=1  total=0.487806s (read 0.007582s, parse 0.480152s, reduce 0.000025s)
+  small   P=1 rep=2  total=0.486477s (read 0.007767s, parse 0.478640s, reduce 0.000025s)
+  small   P=1 rep=3  total=0.487527s (read 0.007545s, parse 0.479913s, reduce 0.000025s)
+  small   P=2 rep=1  total=0.483519s (read 0.186530s, parse 0.281140s, reduce 0.202125s)
+  small   P=2 rep=2  total=0.268958s (read 0.004345s, parse 0.261336s, reduce 0.018295s)
+  small   P=2 rep=3  total=0.269389s (read 0.004256s, parse 0.264436s, reduce 0.021807s)
+  small   P=4 rep=1  total=0.287449s (read 0.149420s, parse 0.135313s, reduce 0.156189s)
+  small   P=4 rep=2  total=0.140145s (read 0.003237s, parse 0.134331s, reduce 0.052202s)
+  small   P=4 rep=3  total=0.139914s (read 0.002867s, parse 0.133820s, reduce 0.051934s)
+  small   P=8 rep=1  total=0.188854s (read 0.101994s, parse 0.084934s, reduce 0.129982s)
+  small   P=8 rep=2  total=0.076945s (read 0.002155s, parse 0.070290s, reduce 0.029297s)
+  small   P=8 rep=3  total=0.077960s (read 0.001936s, parse 0.069617s, reduce 0.029585s)
+  medium  seq   rep=1  total=2.384105s
+  medium  seq   rep=2  total=2.384604s
+  medium  seq   rep=3  total=2.380230s
+  medium  P=1 rep=1  total=2.410741s (read 0.036875s, parse 2.373736s, reduce 0.000077s)
+  medium  P=1 rep=2  total=2.412024s (read 0.036850s, parse 2.375044s, reduce 0.000077s)
+  medium  P=1 rep=3  total=2.414572s (read 0.037662s, parse 2.376751s, reduce 0.000080s)
+  medium  P=2 rep=1  total=2.298243s (read 0.971792s, parse 1.323809s, reduce 1.073358s)
+  medium  P=2 rep=2  total=1.307944s (read 0.020407s, parse 1.284428s, reduce 0.092617s)
+  medium  P=2 rep=3  total=1.299255s (read 0.019782s, parse 1.280335s, reduce 0.085936s)
+  medium  P=4 rep=1  total=1.177547s (read 0.512083s, parse 0.661888s, reduce 0.567050s)
+  medium  P=4 rep=2  total=0.672073s (read 0.011217s, parse 0.646106s, reduce 0.243536s)
+  medium  P=4 rep=3  total=0.666738s (read 0.009684s, parse 0.643699s, reduce 0.244277s)
+  medium  P=8 rep=1  total=0.698348s (read 0.341581s, parse 0.351001s, reduce 0.485218s)
+  medium  P=8 rep=2  total=0.338234s (read 0.007963s, parse 0.327271s, reduce 0.126703s)
+  medium  P=8 rep=3  total=0.359373s (read 0.006427s, parse 0.349514s, reduce 0.126031s)
+  large   seq   rep=1  total=9.572210s
+  large   seq   rep=2  total=9.542160s
+  large   seq   rep=3  total=9.551914s
+  large   P=1 rep=1  total=9.635603s (read 0.148429s, parse 9.486952s, reduce 0.000155s)
+  large   P=1 rep=2  total=9.646508s (read 0.148328s, parse 9.497957s, reduce 0.000157s)
+  large   P=1 rep=3  total=9.639132s (read 0.150752s, parse 9.488161s, reduce 0.000151s)
+  large   P=2 rep=1  total=8.962317s (read 3.792758s, parse 5.164889s, reduce 4.108099s)
+  large   P=2 rep=2  total=5.213349s (read 0.078081s, parse 5.123193s, reduce 0.374471s)
+  large   P=2 rep=3  total=5.163496s (read 0.078609s, parse 5.100067s, reduce 0.326115s)
+  large   P=4 rep=1  total=4.504385s (read 1.909705s, parse 2.587396s, reduce 2.064314s)
+  large   P=4 rep=2  total=2.601300s (read 0.043350s, parse 2.557052s, reduce 0.959376s)
+  large   P=4 rep=3  total=2.599060s (read 0.038202s, parse 2.563853s, reduce 0.957789s)
+  large   P=8 rep=1  total=2.455086s (read 1.049111s, parse 1.399251s, reduce 1.623088s)
+  large   P=8 rep=2  total=1.323668s (read 0.024842s, parse 1.293620s, reduce 0.492400s)
+  large   P=8 rep=3  total=1.316645s (read 0.021064s, parse 1.292264s, reduce 0.495410s)
+  xlarge  seq   rep=1  total=42.953911s
+  xlarge  seq   rep=2  total=24.301338s
+  xlarge  seq   rep=3  total=24.271112s
+  xlarge  P=1 rep=1  total=24.465724s (read 0.359825s, parse 24.105495s, reduce 0.000314s)
+  xlarge  P=1 rep=2  total=24.590672s (read 0.366446s, parse 24.223773s, reduce 0.000347s)
+  xlarge  P=1 rep=3  total=24.540295s (read 0.363095s, parse 24.176758s, reduce 0.000333s)
+  xlarge  P=2 rep=1  total=22.491898s (read 9.395483s, parse 13.090579s, reduce 10.189279s)
+  xlarge  P=2 rep=2  total=13.213357s (read 0.189521s, parse 12.993018s, reduce 0.824799s)
+  xlarge  P=2 rep=3  total=13.148873s (read 0.182194s, parse 12.991354s, reduce 0.860379s)
+  xlarge  P=4 rep=1  total=11.270966s (read 4.744481s, parse 6.559165s, reduce 5.080261s)
+  xlarge  P=4 rep=2  total=6.607553s (read 0.096378s, parse 6.502558s, reduce 2.457932s)
+  xlarge  P=4 rep=3  total=6.614240s (read 0.092859s, parse 6.527366s, reduce 2.478447s)
+  xlarge  P=8 rep=1  total=5.957877s (read 2.396512s, parse 3.538666s, reduce 3.872542s)
+  xlarge  P=8 rep=2  total=3.361041s (read 0.061012s, parse 3.297275s, reduce 1.269997s)
+  xlarge  P=8 rep=3  total=3.350346s (read 0.053426s, parse 3.297363s, reduce 1.259868s)
+
+raw timings -> results/q8_timings.csv (MPI), results/q8_sequential.csv (sequential)
+tables  -> results/q8_tables.md
+done
