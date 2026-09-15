@@ -1,0 +1,170 @@
+syntax = "proto3";
+
+package weather;
+
+// ---------------------------------------------------------------------------
+// Real-time weather analytics over gRPC.
+//
+//   streamer  --StreamRecords-->  coordinator  --Process-->  worker x W
+//   dashboard --GetAnalytics-->   coordinator  --GetPartial--> worker x W
+//
+// Records travel in *columnar* batches: one repeated (packed) field per
+// column instead of one message per record.  For a Python implementation this
+// is the single biggest throughput lever -- a 1000-record batch is 7 packed
+// arrays rather than 1000 sub-messages to allocate, parse and iterate.
+// ---------------------------------------------------------------------------
+
+message Header {
+  int64 n = 1;   // declared record count
+  int64 k = 2;   // top-K parameter
+  int64 s = 3;   // declared station count
+}
+
+message RecordBatch {
+  int64 seq = 1;                          // batch sequence number from the streamer
+  repeated int64  timestamp   = 2 [packed = true];
+  repeated int32  station_id  = 3 [packed = true];
+  repeated double temperature = 4 [packed = true];
+  repeated double humidity    = 5 [packed = true];
+  repeated double pressure    = 6 [packed = true];
+  repeated double rainfall    = 7 [packed = true];
+  repeated double wind_speed  = 8 [packed = true];
+}
+
+// First message of an ingest stream carries the header, the rest carry batches.
+message IngestMessage {
+  oneof payload {
+    Header header = 1;
+    RecordBatch batch = 2;
+  }
+}
+
+message IngestSummary {
+  int64 records_received = 1;
+  int64 batches_received = 2;
+  double elapsed_seconds = 3;   // coordinator-side, first batch to last ack
+  double records_per_second = 4;
+}
+
+// Streamer -> coordinator.
+service IngestService {
+  rpc StreamRecords(stream IngestMessage) returns (IngestSummary);
+}
+
+// ---------------------------------------------------------------------------
+// Coordinator -> worker.
+// ---------------------------------------------------------------------------
+message Empty {}
+
+message Extremum {
+  bool valid = 1;
+  double temp = 2;
+  int64 station = 3;
+  int64 timestamp = 4;
+}
+
+message StationPartial {
+  int64 station = 1;
+  int64 count = 2;
+  double temp_sum = 3;
+  double rain_sum = 4;
+}
+
+message IntervalPartial {
+  int64 bucket = 1;
+  int64 count = 2;
+}
+
+// Everything one worker knows.  Mergeable: sums add, min/max fold, extrema
+// resolve with the assignment's tie-break, station/interval tables add by key.
+message PartialState {
+  int64 count = 1;
+  int64 extreme = 2;
+  double sum_t = 3;
+  double sum_h = 4;
+  double sum_p = 5;
+  double sum_rain = 6;
+  double sum_wind = 7;
+  double min_t = 8;  double max_t = 9;
+  double min_h = 10; double max_h = 11;
+  double min_p = 12; double max_p = 13;
+  double max_rain = 14;
+  double max_wind = 15;
+  Extremum hottest = 16;
+  Extremum coldest = 17;
+  repeated StationPartial stations = 18;
+  repeated IntervalPartial intervals = 19;
+  int64 batches_applied = 20;
+  string worker_id = 21;
+}
+
+message WorkerAck {
+  int64 records_processed = 1;
+  int64 batches_processed = 2;
+}
+
+message WorkerInfo {
+  string worker_id = 1;
+  int64 records_processed = 2;
+  double cpu_seconds = 3;
+  int64 rss_bytes = 4;
+}
+
+service WorkerService {
+  // One long-lived client stream per ingest session.
+  rpc Process(stream RecordBatch) returns (WorkerAck);
+  rpc GetPartial(Empty) returns (PartialState);
+  rpc GetInfo(Empty) returns (WorkerInfo);
+  rpc Reset(Empty) returns (Empty);
+}
+
+// ---------------------------------------------------------------------------
+// Dashboard -> coordinator.
+// ---------------------------------------------------------------------------
+message QueryRequest {
+  int32 top_k = 1;            // 0 = use K from the stream header
+  bool include_workers = 2;   // also return per-worker load
+}
+
+message StationRow {
+  int64 station = 1;
+  int64 count = 2;
+  double avg_temp = 3;
+  double total_rain = 4;
+}
+
+message AnalyticsReport {
+  // The HW2 statistics.
+  int64 total_measurements = 1;
+  double avg_temperature = 2;  double min_temperature = 3;  double max_temperature = 4;
+  double avg_humidity = 5;     double min_humidity = 6;     double max_humidity = 7;
+  double avg_pressure = 8;     double min_pressure = 9;     double max_pressure = 10;
+  double total_rainfall = 11;  double max_rainfall = 12;
+  double avg_wind_speed = 13;  double max_wind_speed = 14;
+  int64 extreme_temperature_events = 15;
+  Extremum hottest = 16;
+  Extremum coldest = 17;
+  int64 busiest_interval = 18;
+  int64 busiest_count = 19;
+  repeated StationRow top_stations = 20;
+  int64 stations_seen = 21;
+  int64 intervals_seen = 22;
+
+  // Stream / system state.
+  Header header = 30;
+  bool stream_active = 31;
+  bool stream_complete = 32;
+  int64 records_ingested = 33;      // accepted by the coordinator
+  int64 records_processed = 34;     // applied by workers (sum over partials)
+  double ingest_rate = 35;          // records/s over the last second
+  double elapsed_seconds = 36;      // since the first batch of this session
+  double merge_ms = 37;             // coordinator time to fetch+merge partials
+  repeated WorkerInfo workers = 38;
+  int64 query_count = 39;
+  double coord_cpu_seconds = 40;
+  int64 coord_rss_bytes = 41;
+}
+
+service QueryService {
+  rpc GetAnalytics(QueryRequest) returns (AnalyticsReport);
+}
