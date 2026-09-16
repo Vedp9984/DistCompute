@@ -1,0 +1,13 @@
+  [rnd1k r=2 m=2 frontier] matches Dijkstra
+  [rnd10k r=2 m=2 frontier] matches Dijkstra
+  [rnd10k_dense r=2 m=2 frontier] matches Dijkstra
+  [rnd10k_dense r=1 m=4 frontier] matches Dijkstra
+  [rnd10k_dense r=4 m=4 frontier] matches Dijkstra
+  [rnd10k_dense r=8 m=4 frontier] matches Dijkstra
+  [rnd10k_dense r=4 m=8 frontier] matches Dijkstra
+  [rnd10k_dense r=4 m=4 full] matches Dijkstra
+  [rnd10k r=2 m=2 full] matches Dijkstra
+  [star10k r=2 m=2 frontier] matches Dijkstra
+  [layered10k r=2 m=2 frontier] matches Dijkstra
+  [rnd10k_unreach r=2 m=2 frontier] matches Dijkstra
+  [chain40 r=2 m=2 frontier] matches Dijkstra

@@ -1,0 +1,3 @@
+tag,dataset,records,workers,batch,dist,query_clients,rate,preload,rep,stream_wall_s,streamer_rps,coord_rps,coord_elapsed_s,e2e_s,queries,qps,q_mean_ms,q_p50_ms,q_p95_ms,q_p99_ms,coord_cpu_s,coord_rss_mb,worker_cpu_s_sum,worker_rss_mb_max,final_match
+,weather_small.txt,1000000,1,1000,rr,0,0,1,0,1.820,550893,551196,1.810,3.403,,,,,,,0.42,50,1.88,43,yes
+,weather_small.txt,1000000,4,1000,rr,0,0,1,0,0.690,1450954,1453351,0.690,2.302,,,,,,,0.52,64,2.74,43,yes
