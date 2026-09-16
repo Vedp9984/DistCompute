@@ -1,0 +1,16 @@
+Connected to server as 'client1'.
+
+==== Collaborative Document Client ====
+  1. Create Document      create <name> "<content>"
+  2. Open Document        open <name>
+  3. Edit Document        edit <name> <pos> "<text>"
+  4. Subscribe to Updates subscribe <name>
+  5. Exit                 exit
+
+> [Client] Document report.txt created.
+> [Client] Hello World
+> [Client] Edit applied (version 1).
+[Client] Hello Distributed World
+> [Client] Edit applied (version 2).
+[Client] [v2] Hello Distributed World
+> [Client] Bye.

@@ -1,0 +1,21 @@
+== create / get ==
+  [ok] create message
+  [ok] get returns initial content, version 0
+== error paths ==
+  [ok] ALREADY_EXISTS: document 'test_1789491425304.txt' already exists
+  [ok] INVALID_ARGUMENT: document name must not be empty
+  [ok] NOT_FOUND: document 'nope.txt' does not exist
+  [ok] NOT_FOUND: document 'nope.txt' does not exist
+  [ok] OUT_OF_RANGE: position 99 is beyond the end of the document (length 11)
+  [ok] NOT_FOUND: document 'nope.txt' does not exist
+== subscribe + edit ==
+  [ok] subscription starts with a snapshot
+  [ok] insert at 6 -> 'Hello Distributed World'
+  [ok] insert at 0 (prepend)
+  [ok] insert at len (append)
+  [ok] empty insert still bumps version
+  [ok] subscriber got 4 updates
+  [ok] in order
+  [ok] last update content matches
+  [ok] no updates after unsubscribe
+RESULT: PASS

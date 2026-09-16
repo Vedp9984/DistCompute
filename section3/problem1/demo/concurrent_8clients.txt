@@ -1,0 +1,27 @@
+[demo] created concurrent8.txt: 'Hello World'
+[demo] 8 clients inserting at position 6 simultaneously ...
+[Update] v1 by client5   -> 'Hello Client4 World'
+[Update] v2 by client8   -> 'Hello Client7 Client4 World'
+[Update] v3 by client2   -> 'Hello Systems Client7 Client4 World'
+[Update] v4 by client1   -> 'Hello Distributed Systems Client7 Client4 World'
+[Update] v5 by client4   -> 'Hello Client3 Distributed Systems Client7 Client4 World'
+[Update] v6 by client3   -> 'Hello Client2 Client3 Distributed Systems Client7 Client4 World'
+[Update] v7 by client7   -> 'Hello Client6 Client2 Client3 Distributed Systems Client7 Client4 World'
+[Update] v8 by client6   -> 'Hello Client5 Client6 Client2 Client3 Distributed Systems Client7 Client4 World'
+[client1] inserted 'Distributed ' -> got version 4 (9.9 ms): 'Hello Distributed Systems Client7 Client4 World'
+[client2] inserted 'Systems ' -> got version 3 (9.2 ms): 'Hello Systems Client7 Client4 World'
+[client3] inserted 'Client2 ' -> got version 6 (10.6 ms): 'Hello Client2 Client3 Distributed Systems Client7 Client4 World'
+[client4] inserted 'Client3 ' -> got version 5 (10.4 ms): 'Hello Client3 Distributed Systems Client7 Client4 World'
+[client5] inserted 'Client4 ' -> got version 1 (9.1 ms): 'Hello Client4 World'
+[client6] inserted 'Client5 ' -> got version 8 (10.3 ms): 'Hello Client5 Client6 Client2 Client3 Distributed Systems Client7 Client4 World'
+[client7] inserted 'Client6 ' -> got version 7 (11.1 ms): 'Hello Client6 Client2 Client3 Distributed Systems Client7 Client4 World'
+[client8] inserted 'Client7 ' -> got version 2 (9.7 ms): 'Hello Client7 Client4 World'
+[demo] final document (v8): 'Hello Client5 Client6 Client2 Client3 Distributed Systems Client7 Client4 World'
+  [ok] length 79 == 79
+  [ok] version 8 == 8
+  [ok] every insert present and untorn
+  [ok] each edit got a distinct consecutive version
+  [ok] subscriber received 8 updates
+  [ok] updates arrived in version order
+  [ok] last update equals final document
+[demo] RESULT: PASS

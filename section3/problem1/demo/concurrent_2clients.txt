@@ -1,0 +1,15 @@
+[demo] created concurrent2.txt: 'Hello World'
+[demo] 2 clients inserting at position 6 simultaneously ...
+[Update] v1 by client2   -> 'Hello Systems World'
+[client1] inserted 'Distributed ' -> got version 2 (1.3 ms): 'Hello Distributed Systems World'
+[client2] inserted 'Systems ' -> got version 1 (1.2 ms): 'Hello Systems World'
+[Update] v2 by client1   -> 'Hello Distributed Systems World'
+[demo] final document (v2): 'Hello Distributed Systems World'
+  [ok] length 31 == 31
+  [ok] version 2 == 2
+  [ok] every insert present and untorn
+  [ok] each edit got a distinct consecutive version
+  [ok] subscriber received 2 updates
+  [ok] updates arrived in version order
+  [ok] last update equals final document
+[demo] RESULT: PASS
